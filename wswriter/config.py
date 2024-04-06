@@ -9,7 +9,6 @@ class RedisConfig(BaseModel):
     port: conint(ge=1, le=65536) = 6379
     stream_id: str = 'stream1'
     input_stream_prefix: str = 'objecttracker'
-    output_stream_prefix: str = 'mystage'
 
 class MyStageConfig(BaseSettings):
     log_level: LogLevel = LogLevel.WARNING
