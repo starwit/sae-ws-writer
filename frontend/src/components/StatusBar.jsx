@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles/StatusBar.css';
 
 const StatusBar = ({ connected, objectCount, trajectories, frameInfo }) => {
   // Count active and passive trajectories
@@ -6,31 +7,26 @@ const StatusBar = ({ connected, objectCount, trajectories, frameInfo }) => {
   const passiveCount = trajectories ? trajectories.filter(t => !t.isActive).length : 0;
   
   return (
-    <div style={{
-      position: 'absolute',
-      bottom: '10px',
-      left: '10px',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      color: 'white',
-      padding: '10px',
-      borderRadius: '5px',
-      zIndex: 10,
-      fontFamily: 'monospace'
-    }}>
-      <div>
-        WebSocket: <span style={{ color: connected ? '#4CAF50' : '#F44336' }}>
+    <div className="status-bar">
+      <div className="connection-status">
+        WebSocket: <span className={connected ? "connection-active" : "connection-inactive"}>
           {connected ? 'CONNECTED' : 'DISCONNECTED'}
         </span>
       </div>
-      <div>
-        Trajectories: <span style={{ color: '#4CAF50' }}>{activeCount} active</span>, <span style={{ color: '#AAAAAA' }}>{passiveCount} passive</span>
+      <div className="trajectory-info">
+        Trajectories: <span className="active-count">{activeCount} active</span>, 
+        <span className="passive-count"> {passiveCount} passive</span>
       </div>
       {frameInfo && (
-        <>
-          <div>Source: {frameInfo.sourceId || 'Unknown'}</div>
-          <div>Resolution: {frameInfo.shape ? `${frameInfo.shape.width}x${frameInfo.shape.height}` : 'Unknown'}</div>
-          <div>Time: {new Date(parseInt(frameInfo.timestampUtcMs)).toISOString()}</div>
-        </>
+        <div className="frame-info">
+          <div className="frame-info-item">Source: {frameInfo.sourceId || 'Unknown'}</div>
+          <div className="frame-info-item">
+            Resolution: {frameInfo.shape ? `${frameInfo.shape.width}x${frameInfo.shape.height}` : 'Unknown'}
+          </div>
+          <div className="frame-info-item">
+            Time: {new Date(parseInt(frameInfo.timestampUtcMs)).toISOString()}
+          </div>
+        </div>
       )}
     </div>
   );

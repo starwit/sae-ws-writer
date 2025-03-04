@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DeckGL from '@deck.gl/react';
 import { PathLayer, ScatterplotLayer } from '@deck.gl/layers';
 import { OrthographicView } from '@deck.gl/core';
+import '../styles/TrajectoryVisualization.css';
 
 const TrajectoryVisualization = ({ trajectories, frameInfo }) => {
   const [viewState, setViewState] = useState({
@@ -145,25 +146,11 @@ const TrajectoryVisualization = ({ trajectories, frameInfo }) => {
       onViewStateChange={onViewStateChange}
       layers={[backgroundLayer, ...layers]}
       getCursor={({isDragging}) => isDragging ? 'grabbing' : 'default'}
-      style={{ 
-        position: 'absolute', 
-        width: '100%', 
-        height: '100%',
-        background: '#f0f0f0' // Light gray background
-      }}
+      className="deckgl-container"
     >
       {/* Debug information */}
       {frameInfo && 
-        <div style={{
-          position: 'absolute',
-          top: 5,
-          left: 5,
-          padding: '5px',
-          background: 'rgba(0,0,0,0.5)',
-          color: 'white',
-          fontSize: '12px',
-          zIndex: 100
-        }}>
+        <div className="debug-info">
           Canvas: {dimensions.width} × {dimensions.height}
         </div>
       }

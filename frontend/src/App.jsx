@@ -3,6 +3,7 @@ import TrajectoryVisualization from './components/TrajectoryVisualization';
 import StatusBar from './components/StatusBar';
 import WebSocketService from './utils/websocketService';
 import ObjectTracker from './utils/objectTracker';
+import './styles/App.css';
 
 const WS_URL = 'ws://localhost:12345';
 
@@ -54,15 +55,7 @@ function App() {
   };
 
   return (
-    <div 
-      ref={containerRef}
-      style={{ 
-        width: '100%', 
-        height: '100%', 
-        position: 'relative',
-        overflow: 'hidden'
-      }}
-    >
+    <div ref={containerRef} className="app-container">
       <TrajectoryVisualization 
         trajectories={trajectories} 
         frameInfo={frameInfo}
@@ -73,22 +66,10 @@ function App() {
         trajectories={trajectories}
         frameInfo={frameInfo}
       />
-      <div style={{
-        position: 'absolute',
-        top: '10px',
-        right: '10px',
-        zIndex: 10
-      }}>
+      <div className="clear-button-container">
         <button 
           onClick={clearTrajectories}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#f44336',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
+          className="clear-button"
         >
           Clear Trajectories
         </button>
