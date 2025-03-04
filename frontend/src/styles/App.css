@@ -3,6 +3,8 @@
   height: 100%;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .clear-button-container {

@@ -3,6 +3,7 @@ class ObjectTracker {
     this.trajectories = new Map(); // Map of objectId -> array of points (active trajectories)
     this.passiveTrajectories = []; // Array of passive trajectory paths
     this.maxTrajectoryPoints = maxTrajectoryPoints;
+    this.maxPassiveTrajectories = 500; // Keep 500 passive trajectories
     this.activeColor = [0, 128, 255, 255]; // Blue for active trajectories
     this.passiveColor = [150, 150, 150, 200]; // Grey with some transparency for passive trajectories
     this.activeTTL = 2000; // Time to live in milliseconds before becoming passive (2 seconds)
@@ -97,10 +98,10 @@ class ObjectTracker {
       }
     });
     
-    // Limit the number of passive trajectories (optional)
-    if (this.passiveTrajectories.length > 100) {
+    // Limit the number of passive trajectories
+    if (this.passiveTrajectories.length > this.maxPassiveTrajectories) {
       // Remove oldest passive trajectories if we have too many
-      this.passiveTrajectories.splice(0, this.passiveTrajectories.length - 100);
+      this.passiveTrajectories.splice(0, this.passiveTrajectories.length - this.maxPassiveTrajectories);
     }
   }
   
