@@ -11,7 +11,7 @@ function App() {
   const [connected, setConnected] = useState(false);
   const [trajectories, setTrajectories] = useState([]);
   const [frameInfo, setFrameInfo] = useState(null);
-  const [objectTracker] = useState(() => new ObjectTracker(500)); // Increased to 500 points
+  const [objectTracker] = useState(() => new ObjectTracker(500));
   const [ws, setWs] = useState(null);
   const containerRef = useRef(null);
 
@@ -27,27 +27,30 @@ function App() {
     setTrajectories(updatedTrajectories);
   };
 
+  // Handle connection status changes - this is our single source of truth
+  const handleConnectionChange = (isConnected) => {
+    console.log('WebSocket connection status changed:', isConnected);
+    setConnected(isConnected);
+  };
+
   // Initialize WebSocket connection
   useEffect(() => {
-    const webSocketService = new WebSocketService(WS_URL, handleMessage);
+    const webSocketService = new WebSocketService(
+      WS_URL, 
+      handleMessage,
+      handleConnectionChange
+    );
+    
     webSocketService.connect();
     setWs(webSocketService);
-    setConnected(true);
 
+    // Cleanup on unmount
     return () => {
       if (webSocketService) {
         webSocketService.disconnect();
-        setConnected(false);
       }
     };
   }, []);
-
-  // Handle connection status
-  useEffect(() => {
-    if (ws) {
-      setConnected(ws.isConnected);
-    }
-  }, [ws]);
 
   const clearTrajectories = () => {
     objectTracker.clearTrajectories();
@@ -62,7 +65,7 @@ function App() {
       />
       <StatusBar 
         connected={connected} 
-        objectCount={trajectories.filter(t => t.isActive).length}
+        objectCount={trajectories.filter(t => t.isActive)?.length || 0}
         trajectories={trajectories}
         frameInfo={frameInfo}
       />

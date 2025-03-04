@@ -1,7 +1,8 @@
 class WebSocketService {
-  constructor(url, onMessageCallback) {
+  constructor(url, onMessageCallback, onConnectionStatusChange) {
     this.url = url;
     this.onMessageCallback = onMessageCallback;
+    this.onConnectionStatusChange = onConnectionStatusChange || (() => {}); // Optional callback for status changes
     this.socket = null;
     this.isConnected = false;
     this.reconnectAttempts = 0;
@@ -17,6 +18,7 @@ class WebSocketService {
         console.log('WebSocket connection established');
         this.isConnected = true;
         this.reconnectAttempts = 0;
+        this.onConnectionStatusChange(true);
       };
 
       this.socket.onmessage = (event) => {
@@ -30,16 +32,26 @@ class WebSocketService {
 
       this.socket.onclose = () => {
         console.log('WebSocket connection closed');
+        const wasConnected = this.isConnected;
         this.isConnected = false;
+        if (wasConnected) {
+          this.onConnectionStatusChange(false);
+        }
         this.attemptReconnect();
       };
 
       this.socket.onerror = (error) => {
         console.error('WebSocket error:', error);
+        const wasConnected = this.isConnected;
         this.isConnected = false;
+        if (wasConnected) {
+          this.onConnectionStatusChange(false);
+        }
       };
     } catch (error) {
       console.error('Failed to connect to WebSocket:', error);
+      this.isConnected = false;
+      this.onConnectionStatusChange(false);
       this.attemptReconnect();
     }
   }
@@ -58,9 +70,16 @@ class WebSocketService {
   }
 
   disconnect() {
-    if (this.socket && this.isConnected) {
+    if (this.socket) {
       this.socket.close();
+      this.isConnected = false;
+      this.onConnectionStatusChange(false);
     }
+  }
+
+  // Method to check connection status
+  getConnectionStatus() {
+    return this.isConnected;
   }
 }
 
