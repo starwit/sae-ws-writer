@@ -10,7 +10,7 @@ const TrajectoryVisualization = ({ trajectories, frameInfo }) => {
     width: 1000,  // Default initial values
     height: 1000
   });
-  
+
   const [viewState, setViewState] = useState({
     target: [0, 0, 0],
     zoom: -1,
@@ -186,7 +186,7 @@ const TrajectoryVisualization = ({ trajectories, frameInfo }) => {
           flipY: true // Y increases from top to bottom in image space
         })}
         viewState={viewState}
-        controller={true}
+        controller={false}
         onViewStateChange={onViewStateChange}
         layers={[backgroundLayer, ...layers]}
         getCursor={({isDragging}) => isDragging ? 'grabbing' : 'default'}
